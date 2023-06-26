@@ -23,7 +23,7 @@
                                     <label class="fs-6 fw-semibold form-label mb-2">
                                         <span>Username</span>
                                     </label>
-                                    <input class="form-control form-control-solid" name="username" value="{{$data->username}}" disabled/>
+                                    <input class="form-control form-control-solid" name="username" value="{{$data->username}}" readonly/>
                                 </div>
                                 <div class="col-lg-6 mb-5">
                                     <label class="fs-6 fw-semibold form-label mb-2">

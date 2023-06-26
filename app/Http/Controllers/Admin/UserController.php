@@ -9,6 +9,7 @@ use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class UserController extends Controller
 {
@@ -50,12 +51,24 @@ class UserController extends Controller
             'email' => 'required|unique:users|max:255',
             'username' => 'required|unique:users|max:255',
         ]);
+
         $data =  new User();
         $data->name = $request->name;
         $data->username = $request->username;
         $data->email = $request->email;
         $data->password = bcrypt($request->password);
+        $data->current_team_id = $request->current_team_id;
         $data->save();
+
+        if ($request->hasFile('photo')) {
+            $location = 'uploads/user/'.$data->id.'.jpg';
+            Image::make($request->file('photo'))->resize(1920, null, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($location);
+            $data->update([
+                'profile_photo_path' => $location,
+            ]);
+        }
 
         // activity()->log('Tambah User '.$request->name);
         return redirect()->route('user.index')->with('success', 'Data user berhasil ditambahkan');
@@ -117,8 +130,12 @@ class UserController extends Controller
         $user = User::find($id);
         $photo = $user->profile_photo_path;
 
-        if ($request->hasFile('profile_photo_path')) {
-            $photo = $request->file('profile_photo_path')->store('uploads/user');
+        if ($request->hasFile('photo')) {
+            $location = 'uploads/user/'.$user->id.'.jpg';
+            Image::make($request->file('photo'))->resize(1920, null, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($location);
+            $photo = $location;
         }
 
         $user->update([
@@ -130,21 +147,14 @@ class UserController extends Controller
             'profile_photo_path' => $photo,
         ]);
 
-        return redirect()->route('user.index')
-                            ->with('success', 'Data User berhasil diupdate');
+        if ( isset($request->password ) ) {
+            $user->update([
+                'password' => bcrypt($request->password),
+            ]);
+        }
 
-    }
+        return redirect()->back()->with('success', 'Data User berhasil diupdate');
 
-    public function updatepassword (Request $request, $id)
-    {
-        $user = User::find($id);
-
-        $user->update([
-            'password' => bcrypt($request->password)
-        ]);
-
-        return redirect()->route('user.index')
-                            ->with('success', 'Data User berhasil diupdate');
     }
 
     public function updateprofile(Request $request)
@@ -152,9 +162,12 @@ class UserController extends Controller
         $user = User::find(Auth::user()->id);
 
         $photo = $user->profile_photo_path;
-
-        if ($request->hasFile('profile_photo_path')) {
-            $photo = $request->file('profile_photo_path')->store('uploads/user');
+        if ($request->hasFile('photo')) {
+            $location = 'uploads/user/'.$user->id.'.jpg';
+            Image::make($request->file('photo'))->resize(1920, null, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($location);
+            $photo = $location;
         }
 
         $user->update([
@@ -163,8 +176,13 @@ class UserController extends Controller
             'profile_photo_path' => $photo,
         ]);
 
-        return redirect()->route('dashboard')
-                            ->with('success', 'Data User berhasil diupdate');
+        if ( isset($request->password ) ) {
+            $user->update([
+                'password' => bcrypt($request->password),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Data User berhasil diupdate');
     }
 
     /**
@@ -173,10 +191,30 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        $user->delete();
-        return redirect()->route('user.index')
-                            ->with('error', 'Data User berhasil dihapus');
+        $data = User::find($id);
+        $photo = $data->profile_photo_path;
+        if ($photo != null) {
+            Storage::delete($photo);
+        }
+        $data->delete();
+
+        return redirect()->route('user.index')->with('error', 'Data User berhasil dihapus');
+    }
+
+    public function deletephoto(string $id)
+    {
+        $data = User::find($id);
+        $photo = $data->profile_photo_path;
+
+        if ($photo != null) {
+            Storage::delete($photo);
+            $data->update([
+                'profile_photo_path' => null,
+            ]);
+        }
+
+        return redirect()->back()->with('error','Photo Profile berhasil di hapus');
     }
 }

@@ -6,7 +6,7 @@
         <div id="kt_app_content_container" class="app-container container-xxl">
             <div class="card card-flush">
                 <div class="card-body pt-9">
-                    <form class="form mt-7" action="{{ route('user.update',$data) }}" method="post" id="modal_form_form" novalidate enctype="multipart/form-data">
+                    <form class="form mt-7" action="{{ route('profile.update',$data) }}" method="post" id="modal_form_form" novalidate enctype="multipart/form-data">
                         {{ csrf_field() }} {{ method_field('PUT') }}
                         <div class="d-flex flex-column fv-row">
                             <div class="row mb-7">
@@ -20,7 +20,7 @@
                                     <label class="fs-6 fw-semibold form-label mb-2">
                                         <span>Username</span>
                                     </label>
-                                    <input class="form-control form-control-solid" name="username" value="{{$data->username}}" disabled/>
+                                    <input class="form-control form-control-solid" name="username" value="{{$data->username}}" readonly/>
                                 </div>
                                 <div class="col-lg-6 mb-5">
                                     <label class="fs-6 fw-semibold form-label mb-2">

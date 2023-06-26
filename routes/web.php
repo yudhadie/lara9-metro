@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/profile', [UserController::class, 'profile'])->name('profile');
             Route::put('/profile', [UserController::class, 'updateprofile'])->name('profile.update');
             Route::put('/setting/user-reset/{user}', [UserController::class, 'updatepassword'])->name('user.reset');
+            Route::put('/photo/delete-user-profile/{id}', [UserController::class, 'deletephoto'])->name('delete-photo-user');
 
         //Information
             //Activity
