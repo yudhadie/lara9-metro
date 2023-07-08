@@ -94,7 +94,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $data = User::FindOrFail($id);
-        $teams = Team::where('id','!=',$data->current_team_id)->orderby('name','asc')->get();
+        $teams = Team::orderby('name','asc')->get();
 
         return view('admin.setting.user.edit',[
             'title' => 'Edit Users',
@@ -131,7 +131,7 @@ class UserController extends Controller
         $photo = $user->profile_photo_path;
 
         if ($request->hasFile('photo')) {
-            $location = 'uploads/user/'.$user->id.'.jpg';
+            $location = 'uploads/user/'.date('YmdHis').'.jpg';
             Image::make($request->file('photo'))->resize(1920, null, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($location);
@@ -163,7 +163,7 @@ class UserController extends Controller
 
         $photo = $user->profile_photo_path;
         if ($request->hasFile('photo')) {
-            $location = 'uploads/user/'.$user->id.'.jpg';
+            $location = 'uploads/user/'.date('YmdHis').'.jpg';
             Image::make($request->file('photo'))->resize(1920, null, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($location);

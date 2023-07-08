@@ -2,44 +2,93 @@
 
 @section('content')
 
-    <div id="kt_app_content" class="app-content flex-column-fluid">
-        <div id="kt_app_content_container" class="app-container container-xxl">
-            <div class="card card-flush">
-                <div class="card-body pt-0 mt-7">
-                    <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="datatable">
-                        <thead>
-                            <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                                <th>No</th>
-                                <th class="min-w-125px">Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="fw-semibold text-gray-600">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-admin.card>
+        <x-admin.table-api>
+            <thead>
+                <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+                    <th>No</th>
+                    <th class="min-w-125px">Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </x-admin.table-api>
+    </x-admin.card>
 
-    <form action="" method="post" id="deleteForm">
-        @csrf
-        @method("DELETE")
-        <input type="submit" value="Hapus" class="btn btn-danger" style="display: none">
-    </form>
+    <x-admin.modal-create :title="$title" action="{{ route('user.store') }}" enctype="multipart/form-data">
+        <x-admin.form-item class="col-6 mb-5" label="Username" required>
+            <input class="form-control form-control-solid"
+                oninput="this.value=this.value.toLowerCase()"
+                name="username"
+                placeholder="Enter a username"/>
+        </x-admin.form-item>
+        <x-admin.form-item class="col-12 mb-5" label="Name" required>
+            <input class="form-control form-control-solid"
+                name="name"
+                placeholder="Enter a name"/>
+        </x-admin.form-item>
+        <x-admin.form-item class="col-6 mb-5" label="Email" required>
+            <i class="fas fa-exclamation-circle ms-2 fs-7"
+                data-bs-toggle="popover"
+                data-bs-trigger="hover"
+                data-bs-html="true"
+                data-bs-content="Email tidak boleh sama">
+            </i>
+            <input class="form-control form-control-solid"
+                type="email"
+                name="email"
+                placeholder="Email"/>
+        </x-admin.form-item>
+        <x-admin.form-item class="col-6 mb-5" label="Password" required>
+            <input class="form-control form-control-solid"
+                type="password"
+                name="password"
+                placeholder="Password" />
+        </x-admin.form-item>
+        <x-admin.form-item class="col-6 mb-5" label="Role" required>
+            <select class="form-control form-control-solid"
+                    data-control="select2"
+                    data-dropdown-parent="#modal_add"
+                    name="current_team_id"
+                    data-placeholder="Pilih Role..." >
+                <option value="">Select a Roles...</option>
+                @foreach ($teams as $team)
+                    <option value="{{$team->id}}">{{$team->name}}</option>
+                @endforeach
+            </select>
+        </x-admin.form-item>
+        <x-admin.form-item class="col-6 mb-5" label="Status" required>
+            <select class="form-control form-control-solid"
+                    data-dropdown-parent="#modal_add"
+                    data-control="select2"
+                    name="active"
+                    data-placeholder="Pilih Status..." >
+                <option value="1">Active</option>
+                <option value="0">Non Active</option>
+            </select>
+        </x-admin.form-item>
+        <x-admin.form-item class="col-12 mb-5" label="Photo">
+            <input class="form-control form-control-solid"
+                    type="file"
+                    accept=".jpg,.jpeg,.png"
+                    name="photo"
+                    placeholder="Photo" />
+        </x-admin.form-item>
 
-    @include('admin.setting.user.modal')
+    </x-admin.modal-create>
+
+    <x-admin.form-delete />
 
 @endsection
 
 @section('create')
-    <div class="d-flex align-items-center gap-2 gap-lg-3">
-        {{-- <a href="{{ route('report.user') }}" target="_blank" class="btn btn-sm fw-bold btn-info">Print</a> --}}
-        <a href="#" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add">Create</a>
-    </div>
+
+    <x-admin.header-button>
+        <x-admin.button-modal-create />
+    </x-admin.header-button>
+
 @endsection
 
 @section('styles')
@@ -48,132 +97,68 @@
 
 @push('scripts')
 
-    <script>
-        document.getElementById('menu-setting').classList.add('show');
-        document.getElementById('menu-setting-user').classList.add('active');
-    </script>
-    <script>
-        "use strict";
-        var KTDatatablesBasicBasic = function() {
-
-        var initTable1 = function() {
-            var table = $('#datatable');
-            table.DataTable({
-                searchDelay: 500,
-                processing: true,
-                serverSide: true,
-                ajax: '{{ route('user.data') }}',
-                columns: [
-                    {data:'DT_RowIndex', orderable: false, searchable: false},
-                    {data:'name'},
-                    {data:'email'},
-                    {data:'role'},
-                    {data:'status'},
-                    {data:'action', responsivePriority: -1},
-                ],
-                columnDefs: [
-                    {
-                        targets: 0,
-                        className: 'dt-center',
-                        width: '30px',
-                    },
-                    {
-                        targets: [3,4,5],
-                        className: 'dt-center',
-                    },
-                ],
-                dom:
-                    "<'row'" +
-                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-                    ">" +
-                    "<'table-responsive'tr>" +
-                    "<'row'" +
-                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-                ">",
-            });
-
-        };
-
-        return {
-            //main function to initiate the module
-            init: function() {
-                initTable1();
-            }
-        };
-        }();
-
-        jQuery(document).ready(function() {
-        KTDatatablesBasicBasic.init();
-        });
-    </script>
-    <script>
-        const form = document.getElementById('modal_form_form');
-        var validator = FormValidation.formValidation(
-            form,
+    <x-admin.menu-show menu="menu-setting"/>
+    <x-admin.menu-active menu="menu-setting-user"/>
+    <x-admin.script-table>
+        ajax: '{{ route('user.data') }}',
+        columns: [
+            {data:'DT_RowIndex', orderable: false, searchable: false},
+            {data:'name'},
+            {data:'email'},
+            {data:'role'},
+            {data:'status'},
+            {data:'action', responsivePriority: -1},
+        ],
+        columnDefs: [
             {
-                fields: {
-                    'name': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Silahkan isi nama!'
-                            }
-                        }
-                    },
-                    'email': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Silahkan isi dengan format email!'
-                            }
-                        }
-                    },
-                    'password': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Silahkan isi password!'
-                            }
-                        }
-                    },
-                    'current_team_id': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Silahkan pilih Role!'
-                            }
-                        }
-                    },
-                    'active': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Silahkan pilih status!'
-                            }
-                        }
-                    },
-                },
-                plugins: {
-                    trigger: new FormValidation.plugins.Trigger(),
-                    bootstrap: new FormValidation.plugins.Bootstrap5({
-                        rowSelector: '.fv-row',
-                        eleInvalidClass: '',
-                        eleValidClass: ''
-                    })
-                }
-            }
-        );
-        const submitButton = document.getElementById('modal_form_submit');
-        submitButton.addEventListener('click', function (e) {
-            e.preventDefault();
-            if (validator) {
-                validator.validate().then(function (status) {
-                    console.log('validated!');
-                    if (status == 'Valid') {
-                        submitButton.setAttribute('data-kt-indicator', 'on');
-                        submitButton.disabled = true;
-                        form.submit();
+                targets: 0,
+                className: 'dt-center',
+                width: '30px',
+            },
+            {
+                targets: [3,4,5],
+                className: 'dt-center',
+            },
+        ],
+    </x-admin.script-table>
+    <x-admin.script-validation>
+        fields: {
+            'name': {
+                validators: {
+                    notEmpty: {
+                        message: 'Silahkan isi nama!'
                     }
-                });
-            }
-        });
-    </script>
+                }
+            },
+            'email': {
+                validators: {
+                    notEmpty: {
+                        message: 'Silahkan isi dengan format email!'
+                    }
+                }
+            },
+            'password': {
+                validators: {
+                    notEmpty: {
+                        message: 'Silahkan isi password!'
+                    }
+                }
+            },
+            'current_team_id': {
+                validators: {
+                    notEmpty: {
+                        message: 'Silahkan pilih Role!'
+                    }
+                }
+            },
+            'active': {
+                validators: {
+                    notEmpty: {
+                        message: 'Silahkan pilih status!'
+                    }
+                }
+            },
+        },
+    </x-admin.script-validation>
 
 @endpush
