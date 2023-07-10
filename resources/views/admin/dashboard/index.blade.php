@@ -11,9 +11,7 @@
 
 @push('scripts')
 
-    <script>
-        document.getElementById('menu-dashboard').classList.add('active');
-    </script>
+    <x-admin.menu-active menu="menu-dashboard"/>
 
 @endpush
 

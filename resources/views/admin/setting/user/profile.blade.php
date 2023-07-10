@@ -2,87 +2,90 @@
 
 @section('content')
 
-    <div id="kt_app_content" class="app-content flex-column-fluid">
-        <div id="kt_app_content_container" class="app-container container-xxl">
-            <div class="card card-flush">
-                <div class="card-body pt-9">
-                    <form class="form mt-7" action="{{ route('profile.update',$data) }}" method="post" id="modal_form_form" novalidate enctype="multipart/form-data">
-                        {{ csrf_field() }} {{ method_field('PUT') }}
-                        <div class="d-flex flex-column fv-row">
-                            <div class="row mb-7">
-                                <div class="col-6 mb-5">
-                                    <label class="fs-6 fw-semibold form-label mb-2">
-                                        <span class="required">Name</span>
-                                    </label>
-                                    <input class="form-control form-control-solid" placeholder="Enter a name" name="name" value="{{$data->name}}"/>
-                                </div>
-                                <div class="col-6 mb-5">
-                                    <label class="fs-6 fw-semibold form-label mb-2">
-                                        <span>Username</span>
-                                    </label>
-                                    <input class="form-control form-control-solid" name="username" value="{{$data->username}}" readonly/>
-                                </div>
-                                <div class="col-lg-6 mb-5">
-                                    <label class="fs-6 fw-semibold form-label mb-2">
-                                        <span class="required">Email</span>
-                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-html="true" data-bs-content="Email tidak boleh sama"></i>
-                                    </label>
-                                    <input class="form-control form-control-solid" type="email" placeholder="Email" name="email" value="{{$data->email}}"/>
-                                </div>
-                                <div class="col-lg-6 mb-5">
-                                    <label class="fs-6 fw-semibold form-label mb-2">
-                                        <span>Reset Password</span>
-                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-html="true" data-bs-content="Reset password (optional)"></i>
-                                    </label>
-                                    <input class="form-control form-control-solid" type="password" placeholder="reset new password" name="password" value=""/>
-                                </div>
-                                <div class="col-lg-6 mb-5">
-                                    <label class="fs-6 fw-semibold form-label mb-2">
-                                        <span>Photo</span>
-                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-html="true" data-bs-content="Optional"></i>
-                                    </label>
-                                    <div class="my-3 text-center">
-                                        <img
-                                            src="{{ asset('assets/media/misc/spinner.gif') }}"
-                                            data-src="{{ asset($data->photo) }}"
-                                            class="lozad rounded mw-100 "
-                                            alt=""
-                                        />
-                                    </div>
-                                    <input type="file" class="form-control form-control-solid" name="photo" placeholder="Photo" accept=".jpg,.jpeg,.png"/>
-                                    @isset($data->profile_photo_path)
-                                        <div class="mt-1 text-end">
-                                            <button class="btn btn-danger btn-sm mt-2"
-                                                href="{{ route('delete-photo-user',$data->id) }}"
-                                                id="delete"
-                                                >
-                                                Delete
-                                            </button>
-                                        </div>
-                                    @endisset
-                                </div>
+    <x-admin.card>
+        <x-admin.form-edit action="{{ route('user.update',$data) }}" enctype="multipart/form-data">
+            <div class="d-flex flex-column fv-row">
+                <div class="row mb-7">
+                    <x-admin.form-item class="col-6 mb-5" label="Name" required>
+                        <input class="form-control form-control-solid"
+                            name="name"
+                            value="{{$data->name}}"
+                            placeholder="Enter a name"/>
+                    </x-admin.form-item>
+                    <x-admin.form-item class="col-6 mb-5" label="Username" required>
+                        <input class="form-control form-control-solid"
+                            name="username"
+                            value="{{$data->username}}"
+                            placeholder="Enter a username"
+                            readonly />
+                    </x-admin.form-item>
+                    <x-admin.form-item class="col-6 mb-5" label="Email" required>
+                        <i class="fas fa-exclamation-circle ms-2 fs-7"
+                            data-bs-toggle="popover"
+                            data-bs-trigger="hover"
+                            data-bs-html="true"
+                            data-bs-content="Email tidak boleh sama">
+                        </i>
+                        <input class="form-control form-control-solid"
+                            type="email"
+                            name="email"
+                            value="{{$data->email}}"
+                            placeholder="Enter a email"/>
+                    </x-admin.form-item>
+                    <x-admin.form-item class="col-6 mb-5" label="Reset Password">
+                        <i class="fas fa-exclamation-circle ms-2 fs-7"
+                            data-bs-toggle="popover"
+                            data-bs-trigger="hover"
+                            data-bs-html="true"
+                            data-bs-content="Reset password (optional)">
+                        </i>
+                        <input class="form-control form-control-solid"
+                            type="password"
+                            name="password"
+                            placeholder="reset new password"/>
+                    </x-admin.form-item>
+                    <x-admin.form-item class="col-6 mb-5" label="Photo">
+                        <i class="fas fa-exclamation-circle ms-2 fs-7"
+                            data-bs-toggle="popover"
+                            data-bs-trigger="hover"
+                            data-bs-html="true"
+                            data-bs-content="Optional">
+                        </i>
+                        <div class="my-3 text-center">
+                            <img
+                                src="{{ asset('assets/media/misc/spinner.gif') }}"
+                                data-src="{{ asset($data->photo) }}"
+                                class="lozad rounded mw-100 "
+                                alt=""
+                            />
+                        </div>
+                        <input type="file" class="form-control form-control-solid" name="photo" placeholder="Photo" accept=".jpg,.jpeg,.png"/>
+                        @isset($data->profile_photo_path)
+                            <div class="mt-1 text-end">
+                                <button class="btn btn-danger btn-sm mt-2"
+                                    href="{{ route('delete-photo-user',$data->id) }}"
+                                    id="delete"
+                                    >
+                                    Delete
+                                </button>
                             </div>
-                        </div>
-                        <div class="card-footer d-flex justify-content-end py-6 px-9">
-                            <a href="{{ route('dashboard') }}" class="btn btn-light me-3">Back</a>
-                            <button type="submit" class="btn btn-primary" id="modal_form_submit">
-                                <span class="indicator-label">Save</span>
-                                <span class="indicator-progress">Please wait...
-                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                            </button>
-                        </div>
-                    </form>
+                        @endisset
+                    </x-admin.form-item>
+
                 </div>
             </div>
-        </div>
-    </div>
+            <x-admin.card-footer>
+                <x-admin.button-back href="{{route('dashboard')}}"/>
+                <x-admin.button-save />
+            </x-admin.card-footer>
+        </x-admin.form-edit>
+    </x-admin.card>
 
-    <form action="" method="post" id="deletePhoto">
+    <form action="{{route('delete-photo-user',$data->id)}}" method="post" id="deletePhoto">
         @csrf
         @method("PUT")
         <input type="submit" value="Hapus" class="btn btn-danger" style="display: none">
     </form>
-
 
 @endsection
 
@@ -93,79 +96,39 @@
 
 @push('scripts')
 
-<script>
-    document.getElementById('menu-dashboard').classList.add('active');
-</script>
-    <script>
-        const form = document.getElementById('modal_form_form');
-        var validator = FormValidation.formValidation(
-            form,
-            {
-                fields: {
-                    'name': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Silahkan isi nama!'
-                            }
-                        }
-                    },
-                    'email': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Silahkan isi dengan format email!'
-                            }
-                        }
-                    },
-                },
-                plugins: {
-                    trigger: new FormValidation.plugins.Trigger(),
-                    bootstrap: new FormValidation.plugins.Bootstrap5({
-                        rowSelector: '.fv-row',
-                        eleInvalidClass: '',
-                        eleValidClass: ''
-                    })
-                }
-            }
-        );
-        const submitButton = document.getElementById('modal_form_submit');
-        submitButton.addEventListener('click', function (e) {
-            e.preventDefault();
-            if (validator) {
-                validator.validate().then(function (status) {
-                    console.log('validated!');
-                    if (status == 'Valid') {
-                        submitButton.setAttribute('data-kt-indicator', 'on');
-                        submitButton.disabled = true;
-                        form.submit();
+    <x-admin.menu-active menu="menu-dashboard"/>
+    <x-admin.alert-delete-photo/>
+    <x-admin.script-validation>
+        fields: {
+            'name': {
+                validators: {
+                    notEmpty: {
+                        message: 'Silahkan isi nama!'
                     }
-                });
-            }
-        });
-    </script>
-    <script>
-        $('button#delete').on('click',function(e){
-            e.preventDefault();
-            var href = $(this).attr('href');
-            Swal.fire({
-                title: 'Apakah kamu yakin hapus data ini?',
-                text: "Data yang sudah di hapus tidak bisa di Kembalikan!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Hapus saja!'
-                }).then((result) => {
-                    if (result.value) {
-                        document.getElementById('deletePhoto').action = href;
-                        document.getElementById('deletePhoto').submit();
-                        Swal.fire(
-                        'Terhapus!!',
-                        'Data kamu berhasil di hapus',
-                        'success'
-                    )
                 }
-            })
-        })
-    </script>
+            },
+            'email': {
+                validators: {
+                    notEmpty: {
+                        message: 'Silahkan isi dengan format email!'
+                    }
+                }
+            },
+            'current_team_id': {
+                validators: {
+                    notEmpty: {
+                        message: 'Silahkan pilih Role!'
+                    }
+                }
+            },
+            'active': {
+                validators: {
+                    notEmpty: {
+                        message: 'Silahkan pilih status!'
+                    }
+                }
+            },
+        },
+    </x-admin.script-validation>
 
 @endpush

@@ -1,11 +1,7 @@
-<a href="{{ route('user.edit', $model) }}" class="btn btn-icon btn-active-light-warning w-30px h-30px me-3" title="Edit details">
-    <i class="bi bi-pencil-square"></i>
-</a>
+<x-admin.button-icon-edit href="{{ route('user.edit', $model) }}" />
 
 @if ($model->id != 1)
-    <button href="{{ route('user.destroy', $model) }}" class="btn btn-icon btn-active-light-danger w-30px h-30px me-3" id="delete" title="Delete">
-        <i class="bi bi-trash3-fill"></i>
-    </button>
+    <x-admin.button-icon-delete href="{{ route('user.destroy', $model) }}" />
 @endif
 
 <x-admin.alert-delete/>
