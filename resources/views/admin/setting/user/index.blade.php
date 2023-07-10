@@ -113,7 +113,7 @@
             {
                 targets: 0,
                 className: 'dt-center',
-                width: '30px',
+                width: '40px',
             },
             {
                 targets: [3,4,5],

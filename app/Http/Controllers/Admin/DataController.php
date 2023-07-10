@@ -4,13 +4,28 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
+use App\Models\Team;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DataController extends Controller
 {
-    public function datauser()
+    public function team()
+    {
+        $data = Team::orderBy('name','asc')->get();
+
+        return datatables()->of($data)
+        ->addColumn('action', 'admin.setting.role.action')
+        ->addIndexColumn()
+        ->addColumn('use', function($data){
+           return $data->user->count();
+        })
+        ->rawColumns(['action'])
+        ->toJson();
+    }
+
+    public function user()
     {
         $data = User::orderBy('name','asc')->get();
 
@@ -31,7 +46,7 @@ class DataController extends Controller
         ->toJson();
     }
 
-    public function dataactivity()
+    public function activity()
     {
         $data = Activity::latest();
 

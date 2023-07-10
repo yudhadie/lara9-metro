@@ -8,7 +8,7 @@ Breadcrumbs::for('dashboard', function (BreadcrumbTrail $trail) {
      $trail->push('Dashboard', route('dashboard'));
 });
 
-//Setting
+//Profile
 Breadcrumbs::for('profile', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Profile');
@@ -20,6 +20,11 @@ Breadcrumbs::for('setting', function (BreadcrumbTrail $trail) {
     $trail->push('Setting','#');
 });
 
+    //Role
+    Breadcrumbs::for('role', function (BreadcrumbTrail $trail) {
+        $trail->parent('setting');
+        $trail->push('Role', route('role.index'));
+    });
     //User
     Breadcrumbs::for('user', function (BreadcrumbTrail $trail) {
         $trail->parent('setting');

@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DataController;
+use App\Http\Controllers\Admin\ErrorController;
 use App\Http\Controllers\Admin\Information\ActivityController;
+use App\Http\Controllers\Admin\Setting\TeamController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,8 +23,9 @@ Route::get('/', function () {
     return view('coming-soon');
 })->name('home');
 
-Route::get('/error-admin', function () { return view('errors.admin'); })->name('error.admin');
-Route::get('/error-active', function () { return view('errors.active'); })->name('error.active');
+//Error Page
+Route::get('/error-admin', [ErrorController::class, 'admin'])->name('error.admin');
+Route::get('/error-active', [ErrorController::class, 'active'])->name('error.active');
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified','active'])
     ->prefix('dashboard')
@@ -33,6 +36,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         //Setting
+            //Role
+            Route::resource('/setting/role', TeamController::class);
             //User
             Route::resource('/setting/user', UserController::class);
             Route::get('/profile', [UserController::class, 'profile'])->name('profile');
@@ -45,8 +50,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::resource('/information/activity', ActivityController::class);
 
         //Table
-        Route::get('/setting/user-data', [DataController::class, 'datauser'])->name('user.data');
-        Route::get('/information/activity-data', [DataController::class, 'dataactivity'])->name('activity.data');
+            //Setting
+            Route::get('/setting/role-data', [DataController::class, 'team'])->name('role.data');
+            Route::get('/setting/user-data', [DataController::class, 'user'])->name('user.data');
+            //Information
+            Route::get('/information/activity-data', [DataController::class, 'activity'])->name('activity.data');
     });
 
 });
