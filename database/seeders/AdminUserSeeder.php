@@ -32,5 +32,15 @@ class AdminUserSeeder extends Seeder
             'password' => bcrypt('user123'),
             'current_team_id' => 2,
         ]);
+
+        for ($i=0; $i < 1000; $i++) {
+            User::create([
+                'name' => 'User '.$i,
+                'username' => 'user'.$i,
+                'email' => 'user'.$i.'@user.com',
+                'password' => bcrypt('user123'),
+                'current_team_id' => 2,
+            ]);
+        }
     }
 }

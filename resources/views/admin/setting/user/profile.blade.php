@@ -2,90 +2,23 @@
 
 @section('content')
 
-    <x-admin.card>
-        <x-admin.form-edit action="{{ route('user.update',$data) }}" enctype="multipart/form-data">
-            <div class="d-flex flex-column fv-row">
-                <div class="row mb-7">
-                    <x-admin.form-item class="col-6 mb-5" label="Name" required>
-                        <input class="form-control form-control-solid"
-                            name="name"
-                            value="{{$data->name}}"
-                            placeholder="Enter a name"/>
-                    </x-admin.form-item>
-                    <x-admin.form-item class="col-6 mb-5" label="Username" required>
-                        <input class="form-control form-control-solid"
-                            name="username"
-                            value="{{$data->username}}"
-                            placeholder="Enter a username"
-                            readonly />
-                    </x-admin.form-item>
-                    <x-admin.form-item class="col-6 mb-5" label="Email" required>
-                        <i class="fas fa-exclamation-circle ms-2 fs-7"
-                            data-bs-toggle="popover"
-                            data-bs-trigger="hover"
-                            data-bs-html="true"
-                            data-bs-content="Email tidak boleh sama">
-                        </i>
-                        <input class="form-control form-control-solid"
-                            type="email"
-                            name="email"
-                            value="{{$data->email}}"
-                            placeholder="Enter a email"/>
-                    </x-admin.form-item>
-                    <x-admin.form-item class="col-6 mb-5" label="Reset Password">
-                        <i class="fas fa-exclamation-circle ms-2 fs-7"
-                            data-bs-toggle="popover"
-                            data-bs-trigger="hover"
-                            data-bs-html="true"
-                            data-bs-content="Reset password (optional)">
-                        </i>
-                        <input class="form-control form-control-solid"
-                            type="password"
-                            name="password"
-                            placeholder="reset new password"/>
-                    </x-admin.form-item>
-                    <x-admin.form-item class="col-6 mb-5" label="Photo">
-                        <i class="fas fa-exclamation-circle ms-2 fs-7"
-                            data-bs-toggle="popover"
-                            data-bs-trigger="hover"
-                            data-bs-html="true"
-                            data-bs-content="Optional">
-                        </i>
-                        <div class="my-3 text-center">
-                            <img
-                                src="{{ asset('assets/media/misc/spinner.gif') }}"
-                                data-src="{{ asset($data->photo) }}"
-                                class="lozad rounded mw-100 "
-                                alt=""
-                            />
-                        </div>
-                        <input type="file" class="form-control form-control-solid" name="photo" placeholder="Photo" accept=".jpg,.jpeg,.png"/>
-                        @isset($data->profile_photo_path)
-                            <div class="mt-1 text-end">
-                                <button class="btn btn-danger btn-sm mt-2"
-                                    href="{{ route('delete-photo-user',$data->id) }}"
-                                    id="delete"
-                                    >
-                                    Delete
-                                </button>
-                            </div>
-                        @endisset
-                    </x-admin.form-item>
+    <x-admin.card.default>
+        <x-admin.form.edit action="{{ route('profile.update',$data) }}" enctype="multipart/form-data">
+            <x-admin.form.input-right label="Username" name="username" type="text" value="{{ $data->username }}" readonly />
+            <x-admin.form.input-right label="Nama" name="name" type="text" value="{{ $data->name }}" required />
+            <x-admin.form.input-right label="Email" name="email" type="email" value="{{ $data->email }}" required />
+            <x-admin.form.input-right label="Reset Password" name="password" type="password" value=""/>
+            <x-admin.form.input-right label="Photo Profile" name="profile_photo_path" type="file" value="{{ $data->profile_photo_path }}" accept=".jpeg,.jpg,.png">
+                <img class="mw-100 mh-300px card-rounded mb-2" src="{{ asset($data->photo) }}"/>
+            </x-admin.form.input-right>
+            <x-admin.card.footer>
+                <x-admin.button.back href="{{route('dashboard')}}"/>
+                <x-admin.button.save />
+            </x-admin.card.footer>
+        </x-admin.form.edit>
+    </x-admin.card.default>
 
-                </div>
-            </div>
-            <x-admin.card-footer>
-                <x-admin.button-back href="{{route('dashboard')}}"/>
-                <x-admin.button-save />
-            </x-admin.card-footer>
-        </x-admin.form-edit>
-    </x-admin.card>
-
-    <form action="{{route('delete-photo-user',$data->id)}}" method="post" id="deletePhoto">
-        @csrf
-        @method("PUT")
-        <input type="submit" value="Hapus" class="btn btn-danger" style="display: none">
-    </form>
+    <x-admin.form.delete-photo :item='$data->id'/>
 
 @endsection
 
@@ -96,9 +29,9 @@
 
 @push('scripts')
 
-    <x-admin.menu-active menu="menu-dashboard"/>
-    <x-admin.alert-delete-photo/>
-    <x-admin.script-validation>
+    <x-admin.menu.active menu="menu-dashboard"/>
+    <x-admin.alert.delete-photo/>
+    <x-admin.script.validation>
         fields: {
             'name': {
                 validators: {
@@ -129,6 +62,6 @@
                 }
             },
         },
-    </x-admin.script-validation>
+    </x-admin.script.validation>
 
 @endpush

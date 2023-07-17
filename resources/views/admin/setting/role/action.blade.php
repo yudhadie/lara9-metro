@@ -1,11 +1,8 @@
-<x-admin.button-icon-edit
-    href="javascript:void(0)"
-    data-id="{{$model->id}}"
-    id="btn-show"
-    title="Show details" />
+<x-admin.button.icon type="show" href="javascript:void(0)" data-id="{{$model->id}}" id="btn-show" />
 
-@if ($model->user->count() == null)
-    <x-admin.button-icon-delete href="{{ route('role.destroy', $model) }}" />
+@if ($model->user->count() == 0)
+    <x-admin.button.icon type="delete" href="{{ route('role.destroy', $model) }}" />
+    <x-admin.alert.delete/>
 @endif
 
-<x-admin.alert-delete/>
+

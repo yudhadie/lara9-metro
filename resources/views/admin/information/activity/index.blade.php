@@ -2,8 +2,8 @@
 
 @section('content')
 
-    <x-admin.card>
-        <x-admin.table-api>
+    <x-admin.card.default>
+        <x-admin.content.table-api>
             <thead>
                 <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
                     <th>No</th>
@@ -14,8 +14,8 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-        </x-admin.table-api>
-    </x-admin.card>
+        </x-admin.content.table-api>
+    </x-admin.card.default>
 
 @endsection
 
@@ -29,10 +29,10 @@
 
 @push('scripts')
 
-    <x-admin.menu-show menu="menu-info"/>
-    <x-admin.menu-active menu="menu-info-activity"/>
+    <x-admin.menu.show menu="menu-info"/>
+    <x-admin.menu.active menu="menu-info-activity"/>
 
-    <x-admin.script-table>
+    <x-admin.script.table>
         ajax: '{{ route('activity.data') }}',
         columns: [
             {data:'DT_RowIndex', orderable: false, searchable: false},
@@ -48,6 +48,6 @@
                 className: 'dt-center',
             },
         ],
-    </x-admin.script-table>
+    </x-admin.script.table>
 
 @endpush

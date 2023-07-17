@@ -8,12 +8,14 @@ use App\Models\Team;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DataController extends Controller
 {
     public function team()
     {
-        $data = Team::orderBy('name','asc')->get();
+        $data = Team::query()
+            ->orderBy('name','asc');
 
         return datatables()->of($data)
         ->addColumn('action', 'admin.setting.role.action')
@@ -27,7 +29,7 @@ class DataController extends Controller
 
     public function user()
     {
-        $data = User::orderBy('name','asc')->get();
+        $data = User::query();
 
         return datatables()->of($data)
         ->addColumn('action', 'admin.setting.user.action')

@@ -1,8 +1,8 @@
-<x-admin.button-icon-edit href="{{ route('user.edit', $model) }}" />
+<x-admin.button.icon type="edit" href="{{ route('user.edit', $model) }}" />
 
 @if ($model->id != 1)
-    <x-admin.button-icon-delete href="{{ route('user.destroy', $model) }}" />
+    <x-admin.button.icon type="delete" href="{{ route('user.destroy', $model) }}" />
+    <x-admin.alert.delete/>
 @endif
 
-<x-admin.alert-delete/>
 

@@ -11,7 +11,7 @@
 
 @push('scripts')
 
-    <x-admin.menu-active menu="menu-dashboard"/>
+    <x-admin.menu.active menu="menu-dashboard"/>
 
 @endpush
 
