@@ -29,7 +29,7 @@
 
 @endsection
 
-@section('create')
+@section('head_button')
 
     <x-admin.content.header-button>
         <x-admin.button.modal-create />

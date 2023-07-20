@@ -19,7 +19,7 @@
 
 @endsection
 
-@section('create')
+@section('head_button')
 
 @endsection
 

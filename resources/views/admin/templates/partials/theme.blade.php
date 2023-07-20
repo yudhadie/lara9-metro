@@ -17,3 +17,9 @@
     document.documentElement.setAttribute("data-bs-theme", themeMode);
     }
 </script>
+
+@if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_state"] === "on")
+    <script>
+        document.getElementById('kt_app_body').setAttribute('data-kt-app-sidebar-minimize','on');
+    </script>
+@endif
